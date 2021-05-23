@@ -18,24 +18,29 @@ class Personne
     private $id;
 
     /**
-     * @ORM\Column(type="string", length=45, nullable=true)
+     * @ORM\Column(type="string", length=50, nullable=true)
      */
     private $nom;
 
     /**
-     * @ORM\Column(type="string", length=45, nullable=true)
+     * @ORM\Column(type="string", length=50, nullable=true)
      */
     private $prenom;
 
     /**
-     * @ORM\Column(type="string", length=45, nullable=true)
+     * @ORM\Column(type="integer", nullable=true)
      */
     private $telephone;
 
     /**
-     * @ORM\Column(type="string", length=45, nullable=true)
+     * @ORM\Column(type="string", length=50)
      */
     private $email;
+
+    public function __toString()
+    {
+        return $this->getEmail();
+    }
 
     public function getId(): ?int
     {
@@ -66,12 +71,12 @@ class Personne
         return $this;
     }
 
-    public function getTelephone(): ?string
+    public function getTelephone(): ?int
     {
         return $this->telephone;
     }
 
-    public function setTelephone(?string $telephone): self
+    public function setTelephone(?int $telephone): self
     {
         $this->telephone = $telephone;
 
@@ -83,7 +88,7 @@ class Personne
         return $this->email;
     }
 
-    public function setEmail(?string $email): self
+    public function setEmail(string $email): self
     {
         $this->email = $email;
 

@@ -18,26 +18,24 @@ class Vendeur
     private $id;
 
     /**
-     * @ORM\OneToOne(targetEntity=Personne::class, cascade={"persist", "remove"})
+     * @ORM\OneToOne(targetEntity=Utilisateur::class, cascade={"persist", "remove"})
      */
-    private $id_utilisateur;
-
+    private $idUtilisateur;
 
     public function getId(): ?int
     {
         return $this->id;
     }
 
-    public function getIdUtilisateur(): ?Personne
+    public function getIdUtilisateur(): ?Utilisateur
     {
-        return $this->id_utilisateur;
+        return $this->idUtilisateur;
     }
 
-    public function setIdUtilisateur(?Personne $id_utilisateur): self
+    public function setIdUtilisateur(?Utilisateur $idUtilisateur): self
     {
-        $this->id_utilisateur = $id_utilisateur;
+        $this->idUtilisateur = $idUtilisateur;
 
         return $this;
     }
-
 }

@@ -14,11 +14,8 @@ class ProduitType extends AbstractType
         $builder
             ->add('nom')
             ->add('description')
-            ->add('prixDeDepart')
             ->add('etat')
             ->add('idLot')
-            ->add('idVente')
-            ->add('idVendeur')
         ;
     }
 

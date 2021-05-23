@@ -68,7 +68,7 @@ class LieuController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}', name: 'lieu_delete', methods: ['DELETE'])]
+    #[Route('/{id}', name: 'lieu_delete', methods: ['POST'])]
     public function delete(Request $request, Lieu $lieu): Response
     {
         if ($this->isCsrfTokenValid('delete'.$lieu->getId(), $request->request->get('_token'))) {

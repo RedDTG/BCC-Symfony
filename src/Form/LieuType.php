@@ -13,6 +13,9 @@ class LieuType extends AbstractType
     {
         $builder
             ->add('adresse')
+            ->add('codePostal')
+            ->add('ville')
+            ->add('nom')
         ;
     }
 

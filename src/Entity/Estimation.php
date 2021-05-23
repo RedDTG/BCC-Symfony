@@ -18,29 +18,47 @@ class Estimation
     private $id;
 
     /**
-     * @ORM\Column(type="text", nullable=true)
+     * @ORM\Column(type="float")
+     */
+    private $prix;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $description;
 
     /**
-     * @ORM\Column(type="date", nullable=true)
+     * @ORM\Column(type="date")
      */
     private $dateEstimation;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Produit::class)
+     * @ORM\ManyToOne(targetEntity=ComissairePriseur::class, inversedBy="estimations")
+     * @ORM\JoinColumn(nullable=false)
      */
-    private $id_produit;
+    private $idCommissaire;
 
     /**
-     * @ORM\ManyToOne(targetEntity=CommissairePriseur::class)
+     * @ORM\ManyToOne(targetEntity=Produit::class, inversedBy="estimations")
+     * @ORM\JoinColumn(nullable=false)
      */
-    private $id_comissaire;
-
+    private $idProduit;
 
     public function getId(): ?int
     {
         return $this->id;
+    }
+
+    public function getPrix(): ?float
+    {
+        return $this->prix;
+    }
+
+    public function setPrix(float $prix): self
+    {
+        $this->prix = $prix;
+
+        return $this;
     }
 
     public function getDescription(): ?string
@@ -60,35 +78,34 @@ class Estimation
         return $this->dateEstimation;
     }
 
-    public function setDateEstimation(?\DateTimeInterface $dateEstimation): self
+    public function setDateEstimation(\DateTimeInterface $dateEstimation): self
     {
         $this->dateEstimation = $dateEstimation;
 
         return $this;
     }
 
+    public function getIdCommissaire(): ?ComissairePriseur
+    {
+        return $this->idCommissaire;
+    }
+
+    public function setIdCommissaire(?ComissairePriseur $idCommissaire): self
+    {
+        $this->idCommissaire = $idCommissaire;
+
+        return $this;
+    }
+
     public function getIdProduit(): ?Produit
     {
-        return $this->id_produit;
+        return $this->idProduit;
     }
 
-    public function setIdProduit(?Produit $id_produit): self
+    public function setIdProduit(?Produit $idProduit): self
     {
-        $this->id_produit = $id_produit;
+        $this->idProduit = $idProduit;
 
         return $this;
     }
-
-    public function getIdComissaire(): ?CommissairePriseur
-    {
-        return $this->id_comissaire;
-    }
-
-    public function setIdComissaire(?CommissairePriseur $id_comissaire): self
-    {
-        $this->id_comissaire = $id_comissaire;
-
-        return $this;
-    }
-
 }

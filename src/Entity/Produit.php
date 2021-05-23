@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\ProduitRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -18,29 +20,34 @@ class Produit
     private $id;
 
     /**
-     * @ORM\Column(type="string", length=45, nullable=true)
+     * @ORM\Column(type="string", length=50)
      */
     private $nom;
 
     /**
-     * @ORM\Column(type="text", nullable=true)
+     * @ORM\Column(type="string", length=255)
      */
     private $description;
 
     /**
-     * @ORM\Column(type="float", nullable=true)
-     */
-    private $prixDeDepart;
-
-    /**
-     * @ORM\Column(type="string", length=45, nullable=true)
+     * @ORM\Column(type="string", length=255)
      */
     private $etat;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Lot::class)
+     * @ORM\ManyToOne(targetEntity=Lot::class, inversedBy="produits")
      */
-    private $id_lot;
+    private $idLot;
+
+    /**
+     * @ORM\OneToMany(targetEntity=Estimation::class, mappedBy="idProduit", orphanRemoval=true)
+     */
+    private $estimations;
+
+    public function __construct()
+    {
+        $this->estimations = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -52,7 +59,7 @@ class Produit
         return $this->nom;
     }
 
-    public function setNom(?string $nom): self
+    public function setNom(string $nom): self
     {
         $this->nom = $nom;
 
@@ -64,21 +71,9 @@ class Produit
         return $this->description;
     }
 
-    public function setDescription(?string $description): self
+    public function setDescription(string $description): self
     {
         $this->description = $description;
-
-        return $this;
-    }
-
-    public function getPrixDeDepart(): ?float
-    {
-        return $this->prixDeDepart;
-    }
-
-    public function setPrixDeDepart(?float $prixDeDepart): self
-    {
-        $this->prixDeDepart = $prixDeDepart;
 
         return $this;
     }
@@ -88,34 +83,51 @@ class Produit
         return $this->etat;
     }
 
-    public function setEtat(?string $etat): self
+    public function setEtat(string $etat): self
     {
         $this->etat = $etat;
 
         return $this;
     }
 
-    public function getIdLot(): ?int
+    public function getIdLot(): ?Lot
     {
-        return $this->id_lot;
+        return $this->idLot;
     }
 
-    public function setIdLot(?int $id_lot): self
+    public function setIdLot(?Lot $idLot): self
     {
-        $this->id_lot = $id_lot;
+        $this->idLot = $idLot;
 
         return $this;
     }
 
-
-    public function getIdVendeur(): ?int
+    /**
+     * @return Collection|Estimation[]
+     */
+    public function getEstimations(): Collection
     {
-        return $this->idVendeur;
+        return $this->estimations;
     }
 
-    public function setIdVendeur(?int $idVendeur): self
+    public function addEstimation(Estimation $estimation): self
     {
-        $this->idVendeur = $idVendeur;
+        if (!$this->estimations->contains($estimation)) {
+            $this->estimations[] = $estimation;
+            $estimation->setIdProduit($this);
+        }
+
+        return $this;
+    }
+
+    public function removeEstimation(Estimation $estimation): self
+    {
+        if ($this->estimations->removeElement($estimation)) {
+            // set the owning side to null (unless already changed)
+            if ($estimation->getIdProduit() === $this) {
+                $estimation->setIdProduit(null);
+            }
+        }
 
         return $this;
     }

@@ -1,9 +1,9 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Liste des produits{% endblock %}
+{% block title %}Produit index{% endblock %}
 
 {% block body %}
-    <h1>Liste des produits</h1>
+    <h1>Produit index</h1>
 
     <table class="table">
         <thead>
@@ -11,7 +11,6 @@
                 <th>Id</th>
                 <th>Nom</th>
                 <th>Description</th>
-                <th>PrixDeDepart</th>
                 <th>Etat</th>
                 <th>actions</th>
             </tr>
@@ -22,20 +21,17 @@
                 <td>{{ produit.id }}</td>
                 <td>{{ produit.nom }}</td>
                 <td>{{ produit.description }}</td>
-                <td>{{ produit.prixDeDepart }}</td>
                 <td>{{ produit.etat }}</td>
                 <td>
-                    <a class="btn btn-sm btn-primary" href="{{ path('produit_show', {'id': produit.id}) }}"><i class="fas fa-eye"></i></a>
-                    <a class="btn btn-sm btn-warning" href="{{ path('produit_edit', {'id': produit.id}) }}"><i class="fas fa-pen"></i></a>
+                    <a href="{{ path('produit_show', {'id': produit.id}) }}">Détails</a>
                 </td>
             </tr>
         {% else %}
             <tr>
-                <td colspan="6">Aucun produit</td>
+                <td colspan="5">no records found</td>
             </tr>
         {% endfor %}
         </tbody>
     </table>
 
-    <a href="{{ path('produit_new') }}">Ajouter Produit</a>
 {% endblock %}

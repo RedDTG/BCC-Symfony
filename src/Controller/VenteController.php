@@ -2,8 +2,11 @@
 
 namespace App\Controller;
 
+use App\Entity\Enchere;
 use App\Entity\Vente;
 use App\Form\VenteType;
+use App\Repository\EnchereRepository;
+use App\Repository\LotRepository;
 use App\Repository\VenteRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -43,10 +46,33 @@ class VenteController extends AbstractController
     }
 
     #[Route('/{id}', name: 'vente_show', methods: ['GET'])]
-    public function show(Vente $vente): Response
+    public function show(Vente $vente, LotRepository $lotRepository, EnchereRepository$encheres): Response
     {
+        $bestEncheres = array();
+        foreach ($lotRepository->findAll() as $i => $lot ) {
+            if ($lot->getIdVente() === $vente) {
+                $enchereByLot = $encheres->findBy(
+                    ['idLot' => $lot->getId()],
+                    ['montant' => 'DESC'], 1, 0);
+                if ($enchereByLot) {
+                    $bestEncheres[$i] = $enchereByLot[0];
+                }
+                else {
+                    $enchereVide = new Enchere();
+                    $enchereVide->setIdLot($lotRepository->findAll()[$i]);
+                    $enchereVide->setMontant(-1);
+                    $bestEncheres[$i] = $enchereVide;
+                }
+            }
+        }
+        $bestEncheres = array_values($bestEncheres);
+
         return $this->render('vente/show.html.twig', [
             'vente' => $vente,
+            'lots' => $lotRepository->findBy(
+                ['idVente' => $vente->getId()]
+            ),
+            'bestEncheres' => $bestEncheres
         ]);
     }
 
@@ -68,7 +94,7 @@ class VenteController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}', name: 'vente_delete', methods: ['DELETE'])]
+    #[Route('/{id}', name: 'vente_delete', methods: ['POST'])]
     public function delete(Request $request, Vente $vente): Response
     {
         if ($this->isCsrfTokenValid('delete'.$vente->getId(), $request->request->get('_token'))) {
@@ -78,5 +104,40 @@ class VenteController extends AbstractController
         }
 
         return $this->redirectToRoute('vente_index');
+    }
+
+    #[Route('/{id}/lots', name: 'vente_lots', methods: ['GET'])]
+    public function lots(Vente $vente, LotRepository $lotRepository, EnchereRepository $encheres): Response
+    {
+//        var_dump($encheres->findBy(
+//            ['idLot' => 1],
+//            ['montant' => 'DESC']));
+
+        foreach ($lotRepository->findAll() as $i => $lot ) {
+            if ($lot->getIdVente() === $vente) {
+                $enchereByLot = $encheres->findBy(
+                    ['idLot' => $lot->getId()],
+                    ['montant' => 'DESC'], 1, 0);
+                if ($enchereByLot) {
+                    $bestEncheres[$i] = $enchereByLot[0];
+                }
+                else {
+                    $enchereVide = new Enchere();
+                    $enchereVide->setIdLot($lotRepository->findAll()[$i]);
+                    $enchereVide->setMontant(-1);
+                    $bestEncheres[$i] = $enchereVide;
+                }
+            }
+        }
+
+        $bestEncheres = array_values($bestEncheres);
+
+        return $this->render('vente/lots.html.twig', [
+            'vente' => $vente,
+            'lots' => $lotRepository->findby(
+                ['idVente' => $vente->getId()]
+            ),
+            'bestEncheres' => $bestEncheres
+        ]);
     }
 }

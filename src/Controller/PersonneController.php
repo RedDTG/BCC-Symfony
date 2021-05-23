@@ -68,7 +68,7 @@ class PersonneController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}', name: 'personne_delete', methods: ['DELETE'])]
+    #[Route('/{id}', name: 'personne_delete', methods: ['POST'])]
     public function delete(Request $request, Personne $personne): Response
     {
         if ($this->isCsrfTokenValid('delete'.$personne->getId(), $request->request->get('_token'))) {

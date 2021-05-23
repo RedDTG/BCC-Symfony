@@ -10,6 +10,9 @@
             <tr>
                 <th>Id</th>
                 <th>Adresse</th>
+                <th>CodePostal</th>
+                <th>Ville</th>
+                <th>Nom</th>
                 <th>actions</th>
             </tr>
         </thead>
@@ -18,6 +21,9 @@
             <tr>
                 <td>{{ lieu.id }}</td>
                 <td>{{ lieu.adresse }}</td>
+                <td>{{ lieu.codePostal }}</td>
+                <td>{{ lieu.ville }}</td>
+                <td>{{ lieu.nom }}</td>
                 <td>
                     <a href="{{ path('lieu_show', {'id': lieu.id}) }}">show</a>
                     <a href="{{ path('lieu_edit', {'id': lieu.id}) }}">edit</a>
@@ -25,7 +31,7 @@
             </tr>
         {% else %}
             <tr>
-                <td colspan="3">no records found</td>
+                <td colspan="6">no records found</td>
             </tr>
         {% endfor %}
         </tbody>

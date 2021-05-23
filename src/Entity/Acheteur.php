@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\AcheteurRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -18,43 +20,86 @@ class Acheteur
     private $id;
 
     /**
-     * @ORM\Column(type="smallint", nullable=true)
+     * @ORM\Column(type="boolean")
      */
-    private $solvable;
+    private $isSolvable;
+
+    /**
+     * @ORM\OneToMany(targetEntity=Enchere::class, mappedBy="idAcheteur")
+     */
+    private $encheres;
 
     /**
      * @ORM\OneToOne(targetEntity=Utilisateur::class, cascade={"persist", "remove"})
      */
-    private $id_utilisateur;
+    private $idUtilisateur;
 
+    public function __construct()
+    {
+        $this->encheres = new ArrayCollection();
+    }
+
+    public function __toString()
+    {
+        return $this->getIdUtilisateur()->getIdPersonne()->getEmail();
+    }
 
     public function getId(): ?int
     {
         return $this->id;
     }
 
-    public function getSolvable(): ?int
+    public function getIsSolvable(): ?bool
     {
-        return $this->solvable;
+        return $this->isSolvable;
     }
 
-    public function setSolvable(?int $solvable): self
+    public function setIsSolvable(bool $isSolvable): self
     {
-        $this->solvable = $solvable;
+        $this->isSolvable = $isSolvable;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Enchere[]
+     */
+    public function getEncheres(): Collection
+    {
+        return $this->encheres;
+    }
+
+    public function addEnchere(Enchere $enchere): self
+    {
+        if (!$this->encheres->contains($enchere)) {
+            $this->encheres[] = $enchere;
+            $enchere->setIdAcheteur($this);
+        }
+
+        return $this;
+    }
+
+    public function removeEnchere(Enchere $enchere): self
+    {
+        if ($this->encheres->removeElement($enchere)) {
+            // set the owning side to null (unless already changed)
+            if ($enchere->getIdAcheteur() === $this) {
+                $enchere->setIdAcheteur(null);
+            }
+        }
 
         return $this;
     }
 
     public function getIdUtilisateur(): ?Utilisateur
     {
-        return $this->id_utilisateur;
+        return $this->idUtilisateur;
     }
 
-    public function setIdUtilisateur(?Utilisateur $id_utilisateur): self
+    public function setIdUtilisateur(?Utilisateur $idUtilisateur): self
     {
-        $this->id_utilisateur = $id_utilisateur;
+        $this->idUtilisateur = $idUtilisateur;
 
         return $this;
     }
-
 }

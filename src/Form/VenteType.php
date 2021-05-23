@@ -12,7 +12,13 @@ class VenteType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('attribute')
+            ->add('typeDeVente')
+            ->add('devise')
+            ->add('dateDebut')
+            ->add('dateFin')
+            ->add('heureDebut')
+            ->add('heureFin')
+            ->add('idLieu')
         ;
     }
 

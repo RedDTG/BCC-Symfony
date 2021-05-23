@@ -3,12 +3,16 @@
 namespace App\Entity;
 
 use App\Repository\UtilisateurRepository;
+use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
  * @ORM\Entity(repositoryClass=UtilisateurRepository::class)
+ * @UniqueEntity(fields={"pseudo"}, message="There is already an account with this pseudo")
  */
-class Utilisateur
+class Utilisateur implements UserInterface
 {
     /**
      * @ORM\Id
@@ -18,12 +22,12 @@ class Utilisateur
     private $id;
 
     /**
-     * @ORM\Column(type="string", length=50, nullable=true)
+     * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $adresse;
 
     /**
-     * @ORM\Column(type="string", length=45, nullable=true)
+     * @ORM\Column(type="string", length=50, nullable=true)
      */
     private $ville;
 
@@ -33,19 +37,30 @@ class Utilisateur
     private $codePostal;
 
     /**
-     * @ORM\Column(type="string", length=45)
+     * @ORM\Column(type="string", length=255)
      */
     private $password;
 
     /**
-     * @ORM\OneToOne(targetEntity=Personne::class, cascade={"persist", "remove"})
+     * @ORM\Column(type="string", length=255)
      */
-    private $id_personne;
+    private $pseudo;
+
+    /**
+     * @ORM\OneToOne(targetEntity=Personne::class, cascade={"persist", "remove"})
+     * @ORM\JoinColumn(nullable=true)
+     */
+    private $idPersonne;
 
 
     public function getId(): ?int
     {
         return $this->id;
+    }
+
+    public function __toString()
+    {
+        return $this->getIdPersonne()->getEmail();
     }
 
     public function getAdresse(): ?string
@@ -96,17 +111,54 @@ class Utilisateur
         return $this;
     }
 
-    public function getIdPersonne(): ?Personne
+    public function getPseudo(): ?string
     {
-        return $this->id_personne;
+        return $this->pseudo;
     }
 
-    public function setIdPersonne(?Personne $id_personne): self
+    public function setPseudo(string $pseudo): self
     {
-        $this->id_personne = $id_personne;
+        $this->pseudo = $pseudo;
 
         return $this;
     }
 
+    public function getIdPersonne(): ?Personne
+    {
+        return $this->idPersonne;
+    }
+
+    public function setIdPersonne(Personne $idPersonne): self
+    {
+        $this->idPersonne = $idPersonne;
+
+        return $this;
+    }
+
+    public function getEmail(): ?string
+    {
+        return $this->getIdPersonne()->getEmail();
+    }
+
+    public function getRoles()
+    {
+        return array('ROLE_USER');
+    }
+
+    public function getSalt()
+    {
+        // TODO: Implement getSalt() method.
+        // Sel
+    }
+
+    public function getUsername()
+    {
+        return $this->getPseudo();
+    }
+
+    public function eraseCredentials()
+    {
+        // TODO: Implement eraseCredentials() method.
+    }
 
 }

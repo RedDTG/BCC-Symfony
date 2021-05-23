@@ -3,28 +3,39 @@
 {% block title %}Lot{% endblock %}
 
 {% block body %}
-    <h1>Lot</h1>
+    <h1>{{ lot.nom }}</h1>
+
 
     <table class="table">
         <tbody>
             <tr>
-                <th>Id</th>
-                <td>{{ lot.id }}</td>
-            </tr>
-            <tr>
-                <th>Nom</th>
-                <td>{{ lot.nom }}</td>
-            </tr>
-            <tr>
                 <th>Description</th>
                 <td>{{ lot.description }}</td>
+            </tr>
+            <tr>
+                <th>Prix de départ</th>
+                <td>{{ lot.prixDepart }} €</td>
+            </tr>
+            <tr>
+                <th>Meilleure enchère</th>
+                {% if bestEnchere != 'Aucune' %}
+                        <td>{{ bestEnchere.montant }} €</td>
+                {% else %}
+                    <td>Aucune</td>
+                {% endif %}
+            </tr>
+            <tr>
+                <th>Statut</th>
+                <td>{{ lot.isVendu ? 'Vendu' : 'En vente' }}</td>
             </tr>
         </tbody>
     </table>
 
-    <a href="{{ path('lot_index') }}">back to list</a>
+    <br>
+    <h3>Faire une enchère</h3>
+    {{ include('enchere/_form.html.twig') }}
 
-    <a href="{{ path('lot_edit', {'id': lot.id}) }}">edit</a>
+    <br>
+    <a href="{{ path('vente_show', {'id': vente.id}) }}"><button type="button" class="btn btn-warning"><i class="fas fa-arrow-left"></i> Retour</button></a>
 
-    {{ include('lot/_delete_form.html.twig') }}
 {% endblock %}

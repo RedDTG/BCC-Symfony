@@ -14,7 +14,9 @@ class LotType extends AbstractType
         $builder
             ->add('nom')
             ->add('description')
-            ->add('id_vente')
+            ->add('prixDepart')
+            ->add('isVendu')
+            ->add('idVente')
         ;
     }
 
