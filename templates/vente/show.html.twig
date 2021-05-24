@@ -67,7 +67,12 @@
                         {% endif %}
                     {% endfor %}</td>
                 <td>
-                    <a href="{{ path('lot_show', {'id': lot.id}) }}">Enchérir</a>
+                    {% if app.user %}
+                        <a href="{{ path('lot_show', {'id': lot.id}) }}">Enchérir</a>
+                    {% else %}
+                        <a href="{{ path('not_connected') }}">Enchérir</a>
+                    {% endif %}
+
                     <a href="{{ path('lot_produits', {'id': lot.id}) }}">Produits</a>
                 </td>
             </tr>
